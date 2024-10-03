@@ -1,10 +1,11 @@
-::root {
+:root {
     --paint-font: 'Arial', sans-serif;
-    --top-bar-color: silver;
+    --top-bar-color: #C0C0C0;
+    --padding-body: 16px;
 }
 
 *, *::before, *::after {
-    border-box: box-sizing;
+    box-sizing: border-box;
     margin-top: 0;
     margin-bottom: 0;
     margin-right: 0;
@@ -23,9 +24,38 @@ body {
     margin-right: auto;
     margin-left: auto;
     max-width: 500px;
+    padding-top: var(--padding-body);
+    padding-bottom: var(--padding-body);
+    padding-right: var(--padding-body);
+    padding-left: var(--padding-body);
+}
+
+h1 {
+    color: #FCE300;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    margin-bottom: 10px;
+}
+
+h1 > img {
+    width: 16px;
+    height: auto;
+}
+
+.paint-container {
+    border-width: 1px;
+    border-color: #808080;
+    border-style: solid;
+    display: grid;
 }
 
 header {
+    //grid-area: header;
     background-color: var(--top-bar-color);
     padding-top: 2px;
     padding-bottom: 2px;
@@ -33,6 +63,38 @@ header {
     padding-left: 2px;
 }
 
+header > button {
+    border-width: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+header > button:hover {
+    box-shadow: 
+        1px 1px black,
+        inset -1px -1px gray,
+        inset 1px 1px white;
+}
+
+main {
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-right: 16px;
+    padding-left: 16px;
+}
+
 canvas {
     background-color: #fff;
+}
+
+footer {
+    background-color: silver;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-right: 4px;
+    padding-left: 4px;
 }
