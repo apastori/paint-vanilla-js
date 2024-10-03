@@ -1,5 +1,6 @@
 ::root {
     --paint-font: 'Arial', sans-serif;
+    --top-bar-color: silver;
 }
 
 *, *::before, *::after {
@@ -24,6 +25,14 @@ body {
     max-width: 500px;
 }
 
-canvar {
+header {
+    background-color: var(--top-bar-color);
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+canvas {
     background-color: #fff;
 }
