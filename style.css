@@ -2,6 +2,7 @@
     --paint-font: 'Arial', sans-serif;
     --top-bar-color: #C0C0C0;
     --padding-body: 16px;
+    --tool-bar-side: 24px;
 }
 
 *, *::before, *::after {
@@ -52,6 +53,10 @@ h1 > img {
     border-color: #808080;
     border-style: solid;
     display: grid;
+    grid-template-areas:
+    "header header header"
+    "aside main main"
+    "footer footer footer"
 }
 
 header {
@@ -61,6 +66,7 @@ header {
     padding-bottom: 2px;
     padding-right: 2px;
     padding-left: 2px;
+    grid-area: header;
 }
 
 header > button {
@@ -80,15 +86,71 @@ header > button:hover {
         inset 1px 1px white;
 }
 
+aside {
+    background-color: silver;
+    width: 52px;
+    padding-top: 2px;
+    grid-area: aside;
+}
+
+aside > nav {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+aside button {
+    width: var(--tool-bar-side);
+    height: var(--tool-bar-side);
+    background-color: #BDBDBD;
+    background-image: url("./icons/draw.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    border-size: 1.5px;
+    border-style: solid;
+    border-color: #EEE;
+    border-right-color: #000;
+    border-bottom-color: #000;
+    image-rendering: pixalated;
+}
+
+nav > button.active {
+    background-color: #EEE;
+    border-color: #000;
+    border-right-color: #EEE;
+    border-bottom-color: #EEE;
+}
+
+#erase-button {
+    background-image: url("./icons/erase.png");
+}
+
+#rectangle-button {
+    background-image: url("./icons/rectangle.png");
+}
+
+#ellipse-button {
+    background-image: url("./icons/ellipse.png");
+}
+
+#picker-button {
+    background-image: url("./icons/picker.png");
+}
+
+#clear-button {
+    background-image: url("./icons/trash.png");
+    background-size: 18px;
+}
+
 main {
     padding-top: 16px;
     padding-bottom: 16px;
     padding-right: 16px;
     padding-left: 16px;
+    grid-area: main;
 }
 
 canvas {
-    background-color: #fff;
+    background-color: #FFF;
 }
 
 footer {
@@ -97,4 +159,5 @@ footer {
     padding-bottom: 4px;
     padding-right: 4px;
     padding-left: 4px;
+    grid-area: footer;
 }

@@ -15,6 +15,7 @@ const selectorList = (selector) => {
 }
 
 const canvas = selector("#canvas-paint");
+const colorPicker = selector("#color-picker");
 
 const context = canvas.getContext("2d");
 
@@ -38,6 +39,10 @@ canvas.addEventListener("mouseleave", (event) => {
     stopDrawing(event);
 });
 
+colorPicker.addEventListener("change", () => {
+    handleChangeColor();
+})
+
 function startDrawing(event) {
     isDrawing = true;
     const { offsetX, offsetY } = event;
@@ -59,4 +64,9 @@ function draw(event) {
     context.lineTo(offsetX, offsetY);
     context.stroke();
     [lastX, lastY] = [offsetX, offsetY];
+}
+
+function handleChangeColor() {
+    const { value } = colorPicker;
+    context.strokeStyle = value;
 }
