@@ -38,13 +38,13 @@ const context = canvas.getContext("2d");
 let startX, startY;
 let lastX, lastY;
 let isDrawing = false;
-let mode = Modes.DRAW;
+let mode;
 let imageData;
 let isShiftPressed = false;
 
 (() => { 
     if (typeof window.EyeDropper !== 'undefined') {
-        pickerButton.style.display = "block";
+        pickerButton.removeAttribute('disabled');
     }
 })();
 
@@ -80,20 +80,20 @@ document.addEventListener("keyup", (event) => {
     handleKeyUp(event);
 });
 
-drawButton.addEventListener("click", () => {
-    setMode(Modes.DRAW);
+drawButton.addEventListener("click", async () => {
+    await setMode(Modes.DRAW);
 });
 
-rectangleButton.addEventListener("click", () => {
-    setMode(Modes.RECTANGLE);
+rectangleButton.addEventListener("click", async () => {
+    await setMode(Modes.RECTANGLE);
 });
 
-eraseButton.addEventListener("click", () => {
-    setMode(Modes.ERASE);
+eraseButton.addEventListener("click", async () => {
+    await setMode(Modes.ERASE);
 });
 
-pickerButton.addEventListener("click", () => {
-    setMode(Modes.PICKER);
+pickerButton.addEventListener("click", async () => {
+    await setMode(Modes.PICKER);
 });
 
 function startDrawing(event) {
@@ -124,15 +124,17 @@ function draw(event) {
     if (mode === Modes.RECTANGLE) {
         context.putImageData(imageData, 0, 0);
         // startX initial coordinate click
-        const width = offsetX - startX;
-        const height = offsetY - startY;
+        let width = offsetX - startX;
+        let height = offsetY - startY;
+        if (isShiftPressed) {
+            const sideSquare = Math.min(Math.abs(width), Math.abs(height));
+            width = width > 0 ? sideSquare : sideSquare * -1;
+            height = height > 0 ? sideSquare : sideSquare * -1;
+        }
         context.beginPath();
         context.rect(startX, startY, width, height);
         context.stroke();
         return;
-    }
-    if (mode === Modes.ERASE) {
-
     }
 }
 
@@ -207,3 +209,6 @@ function handleKeyDown({ key }) {
 function handleKeyUp({ key }) {
     if (key === 'Shift') isShiftPressed = false;
 }
+
+//Inital Mode DRAW
+setMode(Modes.DRAW);
