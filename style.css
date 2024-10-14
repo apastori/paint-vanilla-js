@@ -96,6 +96,8 @@ aside {
 aside > nav {
     display: flex;
     flex-wrap: wrap;
+    gap: 1px;
+    justify-content: center;
 }
 
 aside button {
@@ -144,6 +146,10 @@ nav > button.active {
 #clear-button {
     background-image: url("./icons/trash.png");
     background-size: 18px;
+}
+
+#save-button {
+    background-image: url('./icons/save.png');
 }
 
 main {

@@ -7,14 +7,6 @@ const Modes = {
     SAVE: 'save'
 };
 
-const modesDrawFunction = {
-
-};
-
-const modesSetFunctions = {
-
-};
-
 const selector = (selector) => {
     return document.querySelector(selector);
 }
@@ -96,6 +88,10 @@ pickerButton.addEventListener("click", async () => {
     await setMode(Modes.PICKER);
 });
 
+saveButton.addEventListener("click", async () => {
+    await setMode(Modes.SAVE);
+});
+
 function startDrawing(event) {
     isDrawing = true;
     const { offsetX, offsetY } = event;
@@ -104,7 +100,7 @@ function startDrawing(event) {
     imageData = context.getImageData(0, 0, canvas.width, canvas.height);
 }
 
-function stopDrawing(event) {
+function stopDrawing() {
     isDrawing = false;
 }
 
@@ -144,6 +140,7 @@ function handleChangeColor() {
 }
 
 function handleClear() {
+    //Clear Canvas
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
@@ -163,7 +160,8 @@ async function setMode(newMode) {
     if (activeButton) activeButton.classList.remove("active");
     if (mode === Modes.DRAW) {
         drawButton.classList.add('active');
-        canvas.style.cursor = 'crosshair';
+        //canvas.style.cursor = 'crosshair';
+        canvas.style.cursor = "url(./cursors/pincel.png) 0 24, auto";
         //Place new Drawing over existing content
         context.globalCompositeOperation = 'source-over';
         context.lineWidth = 2;
@@ -200,6 +198,17 @@ async function setMode(newMode) {
         }
         return;
     }
+    if (mode === Modes.SAVE) {
+        context.globalCompositeOperation="destination-over";
+        context.fillStyle = "white";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL()
+        link.download = 'my-paint.png';
+        link.click()
+        setMode(previousMode)
+        return;
+    }
 }
 
 function handleKeyDown({ key }) {
@@ -212,3 +221,8 @@ function handleKeyUp({ key }) {
 
 //Inital Mode DRAW
 setMode(Modes.DRAW);
+
+(() => {
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+})();
