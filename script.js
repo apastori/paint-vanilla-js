@@ -27,6 +27,7 @@ const canvas = selector("#canvas-paint");
 const colorPicker = selector("#color-picker");
 const clearButton = selector("#clear-button");
 const drawButton = selector("#draw-button");
+const eraseButton = selector("#erase-button");
 const rectangleButton = selector("#rectangle-button");
 const pickerButton = selector("#picker-button");
 const saveButton = selector("#save-button");
@@ -72,6 +73,12 @@ rectangleButton.addEventListener("click", () => {
     setMode(Modes.RECTANGLE);
 });
 
+eraseButton.addEventListener("click", () => {
+    setMode(Modes.ERASE);
+});
+
+erase
+
 function startDrawing(event) {
     isDrawing = true;
     const { offsetX, offsetY } = event;
@@ -87,7 +94,7 @@ function stopDrawing(event) {
 function draw(event) {
     if (!isDrawing) return;
     const { offsetX, offsetY } = event;
-    if (mode === Modes.DRAW) {
+    if (mode === Modes.DRAW || mode === Modes.ERASE) {
         //start drawing
         context.beginPath();
         //move to current coordinates
@@ -106,6 +113,9 @@ function draw(event) {
         context.rect(startX, startY, width, height);
         context.stroke();
         return;
+    }
+    if (mode === Modes.ERASE) {
+
     }
 }
 
@@ -135,6 +145,7 @@ function setMode(newMode) {
     if (mode === Modes.DRAW) {
         drawButton.classList.add('active');
         canvas.style.cursor = 'crosshair';
+        //Place new Drawing over existing content
         context.globalCompositeOperation = 'source-over';
         context.lineWidth = 2;
         return;
@@ -146,5 +157,13 @@ function setMode(newMode) {
         context.globalCompositeOperation = 'source-over';
         context.lineWidth = 2;
         return;
+    }
+    if (mode === Modes.ERASE) {
+        eraseButton.classList.add('active');
+        canvas.style.cursor = "url(./cursors/erase.png) 0 24 auto";
+        //Eliminate existing content
+        context.globalCompositeOperation = 'destination-out';
+        context.lineWidth = 20;
+        return; 
     }
 }
