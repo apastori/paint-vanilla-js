@@ -40,6 +40,13 @@ let lastX, lastY;
 let isDrawing = false;
 let mode = Modes.DRAW;
 let imageData;
+let isShiftPressed = false;
+
+(() => { 
+    if (typeof window.EyeDropper !== 'undefined') {
+        pickerButton.style.display = "block";
+    }
+})();
 
 canvas.addEventListener("mousedown", (event) => {
     startDrawing(event);
@@ -65,6 +72,14 @@ clearButton.addEventListener("click", () => {
     handleClear();
 });
 
+document.addEventListener("keydown", (event) => {
+    handleKeyDown(event);
+});
+
+document.addEventListener("keyup", (event) => {
+    handleKeyUp(event);
+});
+
 drawButton.addEventListener("click", () => {
     setMode(Modes.DRAW);
 });
@@ -75,6 +90,10 @@ rectangleButton.addEventListener("click", () => {
 
 eraseButton.addEventListener("click", () => {
     setMode(Modes.ERASE);
+});
+
+pickerButton.addEventListener("click", () => {
+    setMode(Modes.PICKER);
 });
 
 function startDrawing(event) {
@@ -135,7 +154,7 @@ const modeElements = {
     SAVE: 'save'
 }
 
-function setMode(newMode) {
+async function setMode(newMode) {
     const previousMode = mode;
     mode = newMode;
     const activeButton = selector("nav > button.active");
@@ -164,4 +183,27 @@ function setMode(newMode) {
         context.lineWidth = 20;
         return; 
     }
+    if (mode === Modes.PICKER) {
+        pickerButton.classList.add("active");
+        const EyeDropper = new window.EyeDropper();
+        try {
+            const colorHexValue = await EyeDropper.open();
+            const { sRGBHex } = colorHexValue;
+            context.strokeStyle = sRGBHex;
+            colorPicker.value = sRGBHex;
+            setMode(previousMode);
+        } catch(error) {
+            console.log(error);
+            throw new Error("Error using Eye Dropper API");
+        }
+        return;
+    }
+}
+
+function handleKeyDown({ key }) {
+    isShiftPressed = key === 'Shift';
+}
+
+function handleKeyUp({ key }) {
+    if (key === 'Shift') isShiftPressed = false;
 }

@@ -113,6 +113,11 @@ aside button {
     image-rendering: pixalated;
 }
 
+aside button:disabled {
+    pointer-events: none;
+    opacity: .5;
+}
+
 nav > button.active {
     background-color: #EEE;
     border-color: #000;
