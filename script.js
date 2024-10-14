@@ -144,13 +144,73 @@ function handleClear() {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-const modeElements = {
-    DRAW: "draw",
-    ERASE: "erase",
-    RECTANGLE: "rectangle",
-    ELLIPSE:"ellipse",
-    PICKER: 'picker',
-    SAVE: 'save'
+const modeActions = {
+    "draw": drawModeAction,
+    "erase": eraseModeAction,
+    "rectangle": rectangleModeAction,
+    "ellipse": ellipseModeAction,
+    "picker": pickerModeAction,
+    "save": saveModeAction
+}
+
+function drawModeAction() {
+    drawButton.classList.add('active');
+    //canvas.style.cursor = 'crosshair';
+    canvas.style.cursor = "url(./cursors/pincel.png) 0 24, auto";
+    //Place new Drawing over existing content
+    context.globalCompositeOperation = 'source-over';
+    context.lineWidth = 2;
+    return;
+}
+
+function rectangleModeAction() {
+    rectangleButton.classList.add('active');
+    canvas.style.cursor = 'nw-resize';
+    //Place new Drawing over existing content
+    context.globalCompositeOperation = 'source-over';
+    context.lineWidth = 2;
+    return;
+}
+
+function eraseModeAction() {
+    eraseButton.classList.add('active');
+    canvas.style.cursor = "url(./cursors/erase.png) 0 24, auto";
+    //Eliminate existing content
+    context.globalCompositeOperation = 'destination-out';
+    context.lineWidth = 20;
+    return; 
+}
+
+async function pickerModeAction(previousMode) {
+    pickerButton.classList.add("active");
+    const EyeDropper = new window.EyeDropper();
+    try {
+        const colorHexValue = await EyeDropper.open();
+        const { sRGBHex } = colorHexValue;
+        context.strokeStyle = sRGBHex;
+        colorPicker.value = sRGBHex;
+        setMode(previousMode);
+    } catch(error) {
+        console.log(error);
+        throw new Error("Error using Eye Dropper API");
+    }
+    return;
+}
+
+function saveModeAction(previousMode) {
+    context.globalCompositeOperation="destination-over";
+    context.fillStyle = "white";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL()
+    link.download = 'my-paint.png';
+    link.click()
+    setMode(previousMode)
+    return;
+}
+
+function ellipseModeAction() {
+
 }
 
 async function setMode(newMode) {
@@ -158,57 +218,11 @@ async function setMode(newMode) {
     mode = newMode;
     const activeButton = selector("nav > button.active");
     if (activeButton) activeButton.classList.remove("active");
-    if (mode === Modes.DRAW) {
-        drawButton.classList.add('active');
-        //canvas.style.cursor = 'crosshair';
-        canvas.style.cursor = "url(./cursors/pincel.png) 0 24, auto";
-        //Place new Drawing over existing content
-        context.globalCompositeOperation = 'source-over';
-        context.lineWidth = 2;
+    if (mode === Modes.PICKER || mode === Modes.SAVE) {
+        modeActions[mode](previousMode);
         return;
     }
-    if (mode === Modes.RECTANGLE) {
-        rectangleButton.classList.add('active');
-        canvas.style.cursor = 'nw-resize';
-        //Place new Drawing over existing content
-        context.globalCompositeOperation = 'source-over';
-        context.lineWidth = 2;
-        return;
-    }
-    if (mode === Modes.ERASE) {
-        eraseButton.classList.add('active');
-        canvas.style.cursor = "url(./cursors/erase.png) 0 24, auto";
-        //Eliminate existing content
-        context.globalCompositeOperation = 'destination-out';
-        context.lineWidth = 20;
-        return; 
-    }
-    if (mode === Modes.PICKER) {
-        pickerButton.classList.add("active");
-        const EyeDropper = new window.EyeDropper();
-        try {
-            const colorHexValue = await EyeDropper.open();
-            const { sRGBHex } = colorHexValue;
-            context.strokeStyle = sRGBHex;
-            colorPicker.value = sRGBHex;
-            setMode(previousMode);
-        } catch(error) {
-            console.log(error);
-            throw new Error("Error using Eye Dropper API");
-        }
-        return;
-    }
-    if (mode === Modes.SAVE) {
-        context.globalCompositeOperation="destination-over";
-        context.fillStyle = "white";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL()
-        link.download = 'my-paint.png';
-        link.click()
-        setMode(previousMode)
-        return;
-    }
+    modeActions[mode]();
 }
 
 function handleKeyDown({ key }) {
