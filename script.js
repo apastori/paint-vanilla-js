@@ -77,8 +77,6 @@ eraseButton.addEventListener("click", () => {
     setMode(Modes.ERASE);
 });
 
-erase
-
 function startDrawing(event) {
     isDrawing = true;
     const { offsetX, offsetY } = event;
@@ -160,7 +158,7 @@ function setMode(newMode) {
     }
     if (mode === Modes.ERASE) {
         eraseButton.classList.add('active');
-        canvas.style.cursor = "url(./cursors/erase.png) 0 24 auto";
+        canvas.style.cursor = "url(./cursors/erase.png) 0 24, auto";
         //Eliminate existing content
         context.globalCompositeOperation = 'destination-out';
         context.lineWidth = 20;
