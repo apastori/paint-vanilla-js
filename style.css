@@ -56,7 +56,7 @@ h1 > img {
     grid-template-areas:
     "header header header"
     "aside main main"
-    "footer footer footer"
+    "footer footer footer";
 }
 
 header {
